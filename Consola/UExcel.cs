@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
 using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Utilidades
 {
@@ -198,6 +199,7 @@ namespace Utilidades
                 excelSheet = null;
                 excelCellrange = null;
                 excelworkBook = null;
+                KillProcess();
             }
 
         }
@@ -213,5 +215,25 @@ namespace Utilidades
             }
         }
 
+        public static void KillProcess()
+        {
+
+            Process[] process = System.Diagnostics.Process.GetProcessesByName("Excel");
+            foreach (System.Diagnostics.Process p in process)
+            {
+                Console.WriteLine("Proceso: " + p.ProcessName);
+                Console.WriteLine("Segundos: " + p.StartTime.ToString());
+
+                if (!string.IsNullOrEmpty(p.ProcessName) && p.StartTime.AddSeconds(+10) < DateTime.Now)
+                {
+                    try
+                    {
+                        p.Kill();
+                    }
+                    catch { }
+                }
+            }
+
+        }
     }
 }
